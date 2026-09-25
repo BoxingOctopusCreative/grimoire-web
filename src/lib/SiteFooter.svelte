@@ -17,6 +17,7 @@
 
 		<div class="footer-meta">
 			<nav class="footer-links" aria-label="Footer">
+				<a href="/manual">Manual</a>
 				<a href="/hcl">HCL</a>
 				<a href={repoUrl} target="_blank" rel="noopener noreferrer">GitHub</a>
 				<a href={releasesUrl} target="_blank" rel="noopener noreferrer">Releases</a>

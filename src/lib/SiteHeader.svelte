@@ -11,6 +11,7 @@
 
 		<nav class="nav-desktop" aria-label="Primary">
 			<a href="/#features">Features</a>
+			<a href="/manual">Manual</a>
 			<a href="/hcl">HCL</a>
 			<a href="/#download">Download</a>
 			<ThemeToggle />
