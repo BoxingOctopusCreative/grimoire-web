@@ -11,12 +11,13 @@
 				<span>Grimoire<span class="brand-dot">.</span></span>
 			</a>
 			<p class="muted footer-tagline">
-				Own your ebook library. Local catalog, native conversion, Kindle sync.
+				Own your ebook library. Local catalog, native conversion, eReader sync.
 			</p>
 		</div>
 
 		<div class="footer-meta">
 			<nav class="footer-links" aria-label="Footer">
+				<a href="/hcl">HCL</a>
 				<a href={repoUrl} target="_blank" rel="noopener noreferrer">GitHub</a>
 				<a href={releasesUrl} target="_blank" rel="noopener noreferrer">Releases</a>
 			</nav>

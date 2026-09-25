@@ -1,23 +1,28 @@
 <script lang="ts">
 	import type { Component } from 'svelte';
+	import { onMount } from 'svelte';
 	import Library from '@lucide/svelte/icons/library';
 	import FolderOpen from '@lucide/svelte/icons/folder-open';
 	import BookOpen from '@lucide/svelte/icons/book-open';
 	import RefreshCw from '@lucide/svelte/icons/refresh-cw';
 	import TabletSmartphone from '@lucide/svelte/icons/tablet-smartphone';
-	import Apple from '@lucide/svelte/icons/apple';
-	import Monitor from '@lucide/svelte/icons/monitor';
-	import Laptop from '@lucide/svelte/icons/laptop';
+	import DownloadPanel from '$lib/DownloadPanel.svelte';
+	import { detectClient, osLabel, refineArch, type OsId } from '$lib/os';
 
 	const repoUrl = 'https://github.com/BoxingOctopusCreative/grimoire';
-	const latestUrl = `${repoUrl}/releases/latest`;
-	const releasesUrl = `${repoUrl}/releases`;
-	const version = 'v0.1.4';
+
+	let detectedOs = $state<OsId>('unknown');
+
+	const heroDownloadLabel = $derived(
+		detectedOs === 'unknown' ? 'Download for desktop' : `Download for ${osLabel(detectedOs)}`
+	);
 
 	const features: {
 		title: string;
 		body: string;
 		icon: Component;
+		href?: string;
+		linkLabel?: string;
 	}[] = [
 		{
 			title: 'Own your library',
@@ -40,45 +45,33 @@
 			icon: RefreshCw
 		},
 		{
-			title: 'Send to Kindle',
-			body: 'USB and MTP sync including Colorsoft. Also detects Kobo, BOOX, and similar devices.',
-			icon: TabletSmartphone
+			title: 'Connect your eReader',
+			body: 'Detects Kindle, Kobo, BOOX, PocketBook, reMarkable, and more over USB. Kindle MTP send included.',
+			icon: TabletSmartphone,
+			href: '/hcl',
+			linkLabel: 'See the hardware list'
 		}
 	];
 
-	const platforms: {
-		title: string;
-		detail: string;
-		icon: Component;
-	}[] = [
-		{
-			title: 'macOS',
-			detail: 'Apple Silicon & Intel',
-			icon: Apple
-		},
-		{
-			title: 'Windows',
-			detail: 'Installer & MSI',
-			icon: Monitor
-		},
-		{
-			title: 'Linux',
-			detail: 'x64 builds',
-			icon: Laptop
-		}
-	];
+	onMount(() => {
+		const initial = detectClient();
+		detectedOs = initial.os;
+		void refineArch(initial).then((refined) => {
+			detectedOs = refined.os;
+		});
+	});
 </script>
 
 <svelte:head>
 	<title>Grimoire. Own your ebook library.</title>
 	<meta
 		name="description"
-		content="Cross-platform desktop eBook library manager. Local SQLite catalog, Calibre-style folders, built-in reader, native conversion, and Kindle sync including Colorsoft."
+		content="Cross-platform desktop eBook library manager. Local SQLite catalog, Calibre-style folders, built-in reader, native conversion, and eReader sync for Kindle, Kobo, and more."
 	/>
 	<meta property="og:title" content="Grimoire. Own your ebook library." />
 	<meta
 		property="og:description"
-		content="Local catalog, native conversion, and Kindle sync without Calibre. Your library stays on your disk."
+		content="Local catalog, native conversion, and eReader sync without Calibre. Your library stays on your disk."
 	/>
 	<meta property="og:image" content="/app-icon.png" />
 	<meta property="og:type" content="website" />
@@ -86,7 +79,7 @@
 	<meta name="twitter:title" content="Grimoire. Own your ebook library." />
 	<meta
 		name="twitter:description"
-		content="Local catalog, native conversion, and Kindle sync without Calibre. Your library stays on your disk."
+		content="Local catalog, native conversion, and eReader sync without Calibre. Your library stays on your disk."
 	/>
 	<meta name="twitter:image" content="/app-icon.png" />
 </svelte:head>
@@ -103,11 +96,11 @@
 				Your library, on your disk.
 			</h1>
 			<p class="hero-support muted fade-up fade-up-delay-2">
-				A local SQLite catalog with Calibre-style folders, a built-in reader, and Kindle sync
-				without installing Calibre.
+				A local SQLite catalog with Calibre-style folders, a built-in reader, and eReader sync for
+				Kindle, Kobo, and more, without installing Calibre.
 			</p>
 			<div class="hero-ctas fade-up fade-up-delay-3">
-				<a class="btn" href="#download">Download for desktop</a>
+				<a class="btn" href="#download">{heroDownloadLabel}</a>
 				<a
 					class="btn secondary"
 					href={repoUrl}
@@ -143,6 +136,11 @@
 				<div>
 					<h3 class="feature-title">{feature.title}</h3>
 					<p class="feature-body muted">{feature.body}</p>
+					{#if feature.href && feature.linkLabel}
+						<p class="feature-link">
+							<a href={feature.href}>{feature.linkLabel}</a>
+						</p>
+					{/if}
 				</div>
 			</li>
 		{/each}
@@ -153,33 +151,11 @@
 	<p class="section-kicker">Platforms</p>
 	<h2 id="download-title" class="section-title">Get Grimoire</h2>
 	<p class="section-lead muted">
-		Desktop builds for macOS, Windows, and Linux. Grab the latest release and keep your library
-		offline-first.
+		Desktop builds for macOS, Windows, and Linux. We detect your OS and list the matching
+		installers from the latest release.
 	</p>
 
-	<div class="download-panel">
-		<ul class="platform-list">
-			{#each platforms as platform (platform.title)}
-				<li>
-					<a class="btn secondary platform-btn" href={latestUrl} target="_blank" rel="noopener noreferrer">
-						<span class="platform-icon" aria-hidden="true">
-							<platform.icon size={20} strokeWidth={1.75} />
-						</span>
-						<span class="platform-text">
-							<span class="platform-name">{platform.title}</span>
-							<span class="platform-detail muted">{platform.detail}</span>
-						</span>
-					</a>
-				</li>
-			{/each}
-		</ul>
-
-		<p class="download-meta muted">
-			Current version <strong>{version}</strong>.
-			<a href={releasesUrl} target="_blank" rel="noopener noreferrer">View all releases</a>
-			for changelogs and older builds.
-		</p>
-	</div>
+	<DownloadPanel />
 </section>
 
 <style>
@@ -352,62 +328,14 @@
 		line-height: 1.55;
 	}
 
-	.download-panel {
-		margin-top: 2.25rem;
-		padding: 1.5rem 0 0;
-		border-top: 1px solid var(--line);
-	}
-
-	.platform-list {
-		list-style: none;
-		margin: 0;
-		padding: 0;
-		display: grid;
-		gap: 0.75rem;
-	}
-
-	.platform-btn {
-		width: 100%;
-		justify-content: flex-start;
-		padding: 0.95rem 1.1rem;
-		gap: 0.85rem;
-		text-align: left;
-	}
-
-	.platform-icon {
-		display: inline-flex;
-		color: var(--accent);
-		flex-shrink: 0;
-	}
-
-	.platform-text {
-		display: flex;
-		flex-direction: column;
-		gap: 0.15rem;
-		align-items: flex-start;
-	}
-
-	.platform-name {
-		font-size: 1rem;
-	}
-
-	.platform-detail {
-		font-size: 0.88rem;
-		font-weight: 400;
-	}
-
-	.download-meta {
-		margin: 1.35rem 0 0;
+	.feature-link {
+		margin: 0.45rem 0 0;
 		font-family: var(--font-ui);
 		font-size: 0.95rem;
-	}
-
-	.download-meta strong {
-		color: var(--ink);
 		font-weight: 600;
 	}
 
-	.download-meta a {
+	.feature-link a {
 		color: var(--accent);
 		text-decoration: underline;
 		text-underline-offset: 2px;
@@ -427,10 +355,6 @@
 
 		.feature-row:nth-last-child(2):nth-child(odd) {
 			border-bottom: 1px solid var(--line);
-		}
-
-		.platform-list {
-			grid-template-columns: repeat(3, 1fr);
 		}
 	}
 

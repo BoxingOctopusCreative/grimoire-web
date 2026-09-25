@@ -22,7 +22,7 @@
 	<title>Grimoire. Own your ebook library.</title>
 	<meta
 		name="description"
-		content="Grimoire is a cross-platform desktop eBook library manager with a local SQLite catalog, built-in reader, native format conversion, and Kindle sync."
+		content="Grimoire is a cross-platform desktop eBook library manager with a local SQLite catalog, built-in reader, native format conversion, and eReader sync for Kindle, Kobo, and more."
 	/>
 </svelte:head>
 

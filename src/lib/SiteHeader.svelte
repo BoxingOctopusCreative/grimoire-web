@@ -10,15 +10,16 @@
 		</a>
 
 		<nav class="nav-desktop" aria-label="Primary">
-			<a href="#features">Features</a>
-			<a href="#download">Download</a>
+			<a href="/#features">Features</a>
+			<a href="/hcl">HCL</a>
+			<a href="/#download">Download</a>
 			<ThemeToggle />
-			<a class="btn" href="#download">Get Grimoire</a>
+			<a class="btn" href="/#download">Get Grimoire</a>
 		</nav>
 
 		<div class="nav-mobile">
 			<ThemeToggle />
-			<a class="btn" href="#download">Get Grimoire</a>
+			<a class="btn" href="/#download">Get Grimoire</a>
 		</div>
 	</div>
 </header>
