@@ -11,8 +11,7 @@
 				<span>Grimoire<span class="brand-dot">.</span></span>
 			</a>
 			<p class="muted footer-tagline">
-				Ebook library management without the clutter. Local catalog, native conversion, eReader
-				sync.
+				Full-featured desktop eBook library management with a clean, clutter-free interface.
 			</p>
 		</div>
 
@@ -24,7 +23,7 @@
 				<a href={releasesUrl} target="_blank" rel="noopener noreferrer">Releases</a>
 			</nav>
 			<p class="muted footer-note">
-				© 2026 Boxing Octopus Creative. Licensed under
+				© 2026 <a href="https://boxingoctop.us" target="_blank" rel="noopener noreferrer">Boxing Octopus Creative</a>. Licensed under
 				<a
 					href="https://www.mozilla.org/en-US/MPL/2.0/"
 					target="_blank"
