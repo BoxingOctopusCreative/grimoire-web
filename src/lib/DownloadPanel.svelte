@@ -27,19 +27,19 @@
 		{
 			id: 'macos',
 			title: 'macOS',
-			detail: 'Apple Silicon & Intel',
+			detail: 'Notarized disk image',
 			icon: Apple
 		},
 		{
 			id: 'windows',
 			title: 'Windows',
-			detail: 'Installer & MSI',
+			detail: 'Zip of Grimoire.exe',
 			icon: Monitor
 		},
 		{
 			id: 'linux',
 			title: 'Linux',
-			detail: 'AppImage, deb, rpm',
+			detail: 'x64 archive',
 			icon: Laptop
 		}
 	];

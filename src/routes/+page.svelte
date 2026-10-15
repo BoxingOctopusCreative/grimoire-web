@@ -7,11 +7,13 @@
 	import RefreshCw from '@lucide/svelte/icons/refresh-cw';
 	import TabletSmartphone from '@lucide/svelte/icons/tablet-smartphone';
 	import DownloadPanel from '$lib/DownloadPanel.svelte';
+	import { fetchLatestRelease } from '$lib/releases';
 	import { detectClient, osLabel, refineArch, type OsId } from '$lib/os';
 
 	const repoUrl = 'https://github.com/BoxingOctopusCreative/grimoire';
 
 	let detectedOs = $state<OsId>('unknown');
+	let releaseTag = $state<string | null>(null);
 
 	const heroDownloadLabel = $derived(
 		detectedOs === 'unknown' ? 'Download for desktop' : `Download for ${osLabel(detectedOs)}`
@@ -26,22 +28,22 @@
 	}[] = [
 		{
 			title: 'Own your library',
-			body: 'Calibre-style on-disk layout with a local metadata.db and Author/Title folders you control.',
+			body: 'Author and title folders on your disk, with metadata you control and covers that travel with each book.',
 			icon: Library
 		},
 		{
 			title: 'Import what you have',
-			body: 'Bring in EPUB, PDF, AZW3, MOBI, TXT, and CBZ/CBR without fighting your existing collection.',
+			body: 'Drop files or folders on the library, or pick them yourself. EPUB, PDF, AZW3, MOBI, TXT, and CBZ/CBR.',
 			icon: FolderOpen
 		},
 		{
 			title: 'Read in place',
-			body: 'Open books in the built-in reader and pick up where you left off with saved progress.',
+			body: 'Books open in their own window, with saved progress. Set the font, text size, and page colors. Comics can show one page or two.',
 			icon: BookOpen
 		},
 		{
 			title: 'Convert natively',
-			body: 'EPUB to MOBI or AZW3, TXT to EPUB, and more. No Calibre install required.',
+			body: 'EPUB to MOBI or AZW3, TXT to EPUB, and more. Conversion happens in the app; nothing else to install.',
 			icon: RefreshCw
 		},
 		{
@@ -59,6 +61,13 @@
 		void refineArch(initial).then((refined) => {
 			detectedOs = refined.os;
 		});
+		void fetchLatestRelease()
+			.then((release) => {
+				releaseTag = release.tag.startsWith('v') ? release.tag : `v${release.tag}`;
+			})
+			.catch(() => {
+				releaseTag = null;
+			});
 	});
 </script>
 
@@ -66,12 +75,12 @@
 	<title>Grimoire. Own your ebook library.</title>
 	<meta
 		name="description"
-		content="Cross-platform desktop eBook library manager. Local SQLite catalog, Calibre-style folders, built-in reader, native conversion, and eReader sync for Kindle, Kobo, and more."
+		content="Desktop ebook library management without the clutter. Organize, read, and send books to Kindle, Kobo, and more."
 	/>
 	<meta property="og:title" content="Grimoire. Own your ebook library." />
 	<meta
 		property="og:description"
-		content="Local catalog, native conversion, and eReader sync without Calibre. Your library stays on your disk."
+		content="Desktop ebook library management without the clutter. Organize, read, and send to Kindle, Kobo, and more."
 	/>
 	<meta property="og:image" content="/app-icon.png" />
 	<meta property="og:type" content="website" />
@@ -79,7 +88,7 @@
 	<meta name="twitter:title" content="Grimoire. Own your ebook library." />
 	<meta
 		name="twitter:description"
-		content="Local catalog, native conversion, and eReader sync without Calibre. Your library stays on your disk."
+		content="Full-featured desktop eBook library management without the clutter. Organize, read, and send to Kindle, Kobo, and more."
 	/>
 	<meta name="twitter:image" content="/app-icon.png" />
 </svelte:head>
@@ -93,14 +102,21 @@
 				<span class="brand hero-wordmark">Grimoire<span class="brand-dot">.</span></span>
 			</div>
 			<h1 id="hero-heading" class="hero-title fade-up fade-up-delay-1">
-				Your library, on your disk.
+				A different <strong style="color: var(--color-accent, #7FB5A5);">Calibre</strong> of eBook library management.
 			</h1>
 			<p class="hero-support muted fade-up fade-up-delay-2">
-				A local SQLite catalog with Calibre-style folders, a built-in reader, and eReader sync for
-				Kindle, Kobo, and more, without installing Calibre.
+				<br />
+				Full-featured desktop eBook library management with a clean, clutter-free interface.
+				<br /><br />
+				Organize, read, and send your books (and comics!) to Kindle, Kobo, and more.
 			</p>
 			<div class="hero-ctas fade-up fade-up-delay-3">
-				<a class="btn" href="#download">{heroDownloadLabel}</a>
+				<a class="btn hero-download" href="#download">
+					<span>{heroDownloadLabel}</span>
+					{#if releaseTag}
+						<span class="hero-download-version">{releaseTag}</span>
+					{/if}
+				</a>
 				<a
 					class="btn secondary"
 					href={repoUrl}
@@ -123,8 +139,8 @@
 	<p class="section-kicker">Features</p>
 	<h2 id="features-title" class="section-title">Built for libraries you keep.</h2>
 	<p class="section-lead muted">
-		Grimoire manages ebooks the way a desktop tool should: files on disk, metadata you own, and
-		devices that connect without a cloud middleman.
+		A native desktop app: files on disk, metadata you own, and devices that connect without a
+		cloud middleman.
 	</p>
 
 	<ul class="feature-list">
@@ -151,8 +167,8 @@
 	<p class="section-kicker">Platforms</p>
 	<h2 id="download-title" class="section-title">Get Grimoire</h2>
 	<p class="section-lead muted">
-		Desktop builds for macOS, Windows, and Linux. We detect your OS and list the matching
-		installers from the latest release.
+		Desktop builds for macOS, Windows, and Linux. macOS disk images are signed and notarized. We
+		detect your OS and list the matching download from the latest release.
 	</p>
 
 	<DownloadPanel />
@@ -234,7 +250,22 @@
 	.hero-ctas {
 		display: flex;
 		flex-wrap: wrap;
+		align-items: center;
 		gap: 0.75rem;
+	}
+
+	.hero-download {
+		flex-direction: column;
+		gap: 0.05rem;
+		line-height: 1.2;
+		padding-top: 0.45rem;
+		padding-bottom: 0.45rem;
+	}
+
+	.hero-download-version {
+		font-size: 0.78rem;
+		font-weight: 500;
+		opacity: 0.85;
 	}
 
 	.hero-visual {

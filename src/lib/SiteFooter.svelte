@@ -11,7 +11,8 @@
 				<span>Grimoire<span class="brand-dot">.</span></span>
 			</a>
 			<p class="muted footer-tagline">
-				Own your ebook library. Local catalog, native conversion, eReader sync.
+				Ebook library management without the clutter. Local catalog, native conversion, eReader
+				sync.
 			</p>
 		</div>
 

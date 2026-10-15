@@ -68,8 +68,9 @@
 	<p class="section-kicker">Devices</p>
 	<h1 id="hcl-title" class="section-title">Hardware compatibility list</h1>
 	<p class="section-lead muted">
-		Grimoire detects these eReader families over USB MTP or mounted volumes. USB send is Kindle MTP
-		today; on other readers you can still browse and remove books from Devices.
+		Grimoire detects these eReader families over USB MTP or mounted volumes. A short chime plays
+		when a reader connects or disconnects. USB send is Kindle MTP today; on other readers you can
+		still browse and remove books from Devices.
 	</p>
 
 	<div class="table-wrap">

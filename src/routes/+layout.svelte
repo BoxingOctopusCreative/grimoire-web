@@ -19,10 +19,10 @@
 		href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,500;9..144,650&family=Source+Sans+3:wght@400;600&family=Source+Serif+4:opsz,wght@8..60,400;8..60,600&display=swap"
 		rel="stylesheet"
 	/>
-	<title>Grimoire. Own your ebook library.</title>
+	<title>Grimoire. Own your eBook library.</title>
 	<meta
 		name="description"
-		content="Grimoire is a cross-platform desktop eBook library manager with a local SQLite catalog, built-in reader, native format conversion, and eReader sync for Kindle, Kobo, and more."
+		content="Full-featured desktop eBook library management without the clutter. \nOrganize, read, and send books to Kindle, Kobo, and more."
 	/>
 </svelte:head>
 

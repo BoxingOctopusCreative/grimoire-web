@@ -37,8 +37,8 @@
 	<p class="section-kicker">Docs</p>
 	<h1 id="manual-title" class="section-title">User manual</h1>
 	<p class="section-lead muted">
-		Grimoire keeps your ebook library on disk. This guide covers install, library setup, import,
-		reading, conversion, and sending books to connected eReaders.
+		Grimoire is a native desktop app that keeps your ebook library on disk. This guide covers
+		install, library setup, import, reading, conversion, and sending books to connected eReaders.
 	</p>
 
 	<nav class="toc" aria-label="Manual sections">
@@ -54,39 +54,29 @@
 			<h2 id="install-title">Install</h2>
 			<p>
 				Download the latest build for your OS from the
-				<a href="/#download">download section</a>. Grimoire ships for macOS (Apple Silicon and
-				Intel), Windows (installer and MSI), and Linux (AppImage, deb, rpm).
+				<a href="/#download">download section</a>. Grimoire ships for macOS 12 or later (Apple
+				Silicon and Intel), Windows x64, and Linux x64.
 			</p>
 
 			<h3>macOS</h3>
 			<p>
-				Release DMGs are not Apple-notarized yet. Gatekeeper may say the app is damaged. Open the
-				DMG and double-click <strong>Install Grimoire.command</strong> (right-click, then Open if
-				needed). That clears quarantine, installs to Applications, and launches the app.
+				Open the disk image and drag Grimoire into Applications. Release DMGs are signed with an
+				Apple Developer ID and notarized, so Gatekeeper opens them normally. Use the Apple Silicon
+				build on M-series Macs and the Intel build on older Macs.
 			</p>
 
 			<h3>Windows</h3>
-			<ul>
-				<li>
-					<strong>NSIS</strong> (<code>*-setup.exe</code>): interactive installs ask for the ebook
-					library folder (default <code>Documents\Grimoire</code>). Silent installs use that
-					default, or <code>/LIBRARYPATH=D:\Books</code>.
-				</li>
-				<li>
-					<strong>MSI</strong>: seeds the same default library path. Override with
-					<code>msiexec /i Grimoire_*.msi LIBRARYPATH="D:\Books"</code>.
-				</li>
-			</ul>
 			<p>
-				Both write <code>%APPDATA%\grimoire\config.json</code> only when that file does not already
-				exist, so upgrades keep an existing library path.
+				Download the zip and run <code>Grimoire.exe</code>. On first launch, choose a library folder
+				from the welcome screen or in <strong>Settings</strong>. Grimoire writes
+				<code>%APPDATA%\grimoire\config.json</code> and opens that library on later launches.
 			</p>
 
 			<h3>Linux</h3>
 			<p>
-				Prefer the AppImage for a portable install, or use the <code>.deb</code> /
-				<code>.rpm</code> packages for your distribution. For Kindle MTP access you may need udev
-				rules; see <a href="#troubleshoot">Troubleshooting</a>.
+				Download the <code>.tar.gz</code>, unpack it, and run <code>./Grimoire</code>. The binary
+				needs Wayland or X11, plus <code>libxkbcommon</code> and fontconfig. For Kindle MTP access
+				you may need udev rules; see <a href="#troubleshoot">Troubleshooting</a>.
 			</p>
 		</section>
 
@@ -107,10 +97,19 @@
 				<code>grimoire/config.json</code>. Change the path anytime in <strong>Settings</strong>.
 				Grimoire opens that library automatically on startup.
 			</p>
+			<p>
+				The library sidebar filters by status (Reading, To Read, Read), format (Novel or Comic
+				Book), genre, and author. The theme control in the top bar is Dark, Light, or Follow
+				System.
+			</p>
 		</section>
 
 		<section id="import" class="manual-section" aria-labelledby="import-title">
 			<h2 id="import-title">Import books</h2>
+			<p>
+				Use the import button, or drop files and folders onto the library window. Grimoire walks
+				folders and imports every supported ebook it finds.
+			</p>
 			<p>Grimoire imports:</p>
 			<ul>
 				<li>EPUB, PDF, AZW3, MOBI, TXT</li>
@@ -130,11 +129,21 @@
 		<section id="read" class="manual-section" aria-labelledby="read-title">
 			<h2 id="read-title">Read in Grimoire</h2>
 			<p>
-				Open a book from the library to read in a separate window. Supported for reading: EPUB, PDF,
+				Open a book from the library to read in its own window. Supported for reading: EPUB, PDF,
 				TXT, DRM-free MOBI, and comics (CBZ/CBR). MOBI is converted to EPUB for display. Reading
 				progress is saved so you can pick up where you left off.
 			</p>
-			<p>Search the catalog with full-text search (FTS5). Edit metadata or delete books from the library UI.</p>
+			<p>
+				For EPUB and TXT, the reader and <strong>Settings</strong> share the font, text size, and
+				text colors. Fonts are Publisher default, Serif, Sans, and OpenDyslexic when that font is
+				installed on the computer. Text size uses <strong>A-</strong> and <strong>A+</strong>. Text
+				colors are Native, Black and white, Inverted, and Paper. Comics have their own zoom, and
+				open as <strong>Single page</strong> or <strong>Two pages</strong>. Those choices are saved
+				for the next book.
+			</p>
+			<p>
+				Search the catalog from the library. Edit metadata or delete books from the book page.
+			</p>
 		</section>
 
 		<section id="metadata" class="manual-section" aria-labelledby="metadata-title">
@@ -175,8 +184,9 @@
 		<section id="devices" class="manual-section" aria-labelledby="devices-title">
 			<h2 id="devices-title">Devices and Kindle send</h2>
 			<p>
-				Open <strong>Devices</strong> while an eReader is plugged in. Grimoire detects Kindles and
-				other readers over USB MTP or mounted volumes. See the
+				Open <strong>Devices</strong> while an eReader is plugged in. Grimoire checks for readers
+				every few seconds and plays a short chime when one connects or disconnects. Detection covers
+				USB MTP and mounted volumes. See the
 				<a href="/hcl">hardware compatibility list</a> for supported families.
 			</p>
 			<p>

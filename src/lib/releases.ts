@@ -32,6 +32,12 @@ type GithubRelease = {
 	assets: GithubAsset[];
 };
 
+function archFromName(lower: string): ArchId {
+	if (lower.includes('aarch64') || lower.includes('arm64')) return 'arm64';
+	if (lower.includes('x64') || lower.includes('x86_64') || lower.includes('amd64')) return 'x64';
+	return 'unknown';
+}
+
 function classifyAsset(asset: GithubAsset): ReleaseAsset | null {
 	const name = asset.name;
 	const lower = name.toLowerCase();
@@ -45,9 +51,21 @@ function classifyAsset(asset: GithubAsset): ReleaseAsset | null {
 	if (lower.endsWith('.dmg')) {
 		platform = 'macos';
 		format = 'DMG';
-		arch = lower.includes('aarch64') ? 'arm64' : lower.includes('x64') ? 'x64' : 'unknown';
+		arch = archFromName(lower);
 		label = arch === 'arm64' ? 'Apple Silicon (.dmg)' : arch === 'x64' ? 'Intel (.dmg)' : 'macOS (.dmg)';
 		priority = arch === 'arm64' ? 10 : 20;
+	} else if (lower.endsWith('.zip') && lower.includes('windows')) {
+		platform = 'windows';
+		format = 'Zip';
+		arch = archFromName(lower);
+		label = 'Grimoire.exe (.zip)';
+		priority = 10;
+	} else if (lower.endsWith('.tar.gz') && lower.includes('linux')) {
+		platform = 'linux';
+		format = 'Tar';
+		arch = archFromName(lower);
+		label = arch === 'arm64' ? 'Linux arm64 (.tar.gz)' : 'Linux x64 (.tar.gz)';
+		priority = 10;
 	} else if (lower.includes('.app.tar.gz')) {
 		platform = 'macos';
 		format = 'App archive';
@@ -123,7 +141,19 @@ export function formatBytes(bytes: number): string {
 	return `${value.toFixed(value >= 10 || unit === 0 ? 0 : 1)} ${units[unit]}`;
 }
 
-export async function fetchLatestRelease(): Promise<LatestRelease> {
+let latestReleaseRequest: Promise<LatestRelease> | null = null;
+
+export function fetchLatestRelease(): Promise<LatestRelease> {
+	if (!latestReleaseRequest) {
+		latestReleaseRequest = loadLatestRelease().catch((error) => {
+			latestReleaseRequest = null;
+			throw error;
+		});
+	}
+	return latestReleaseRequest;
+}
+
+async function loadLatestRelease(): Promise<LatestRelease> {
 	const response = await fetch(RELEASES_API, {
 		headers: { Accept: 'application/vnd.github+json' }
 	});
